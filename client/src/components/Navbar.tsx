@@ -14,8 +14,20 @@ export default function Navbar({ onLoginClick, onSearch }: NavbarProps) {
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch && searchTerm.trim()) {
+    // Always call onSearch, even with empty string to reset search
+    if (onSearch) {
       onSearch(searchTerm.trim());
+    }
+  };
+  
+  // Handle input change and trigger search when cleared
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setSearchTerm(newValue);
+    
+    // If the search field is cleared, reset the search
+    if (newValue === '' && onSearch) {
+      onSearch('');
     }
   };
 
@@ -36,7 +48,7 @@ export default function Navbar({ onLoginClick, onSearch }: NavbarProps) {
                 placeholder="Search destinations..."
                 className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-500"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleInputChange}
               />
               <button 
                 type="submit" 
